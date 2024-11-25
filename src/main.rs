@@ -1,58 +1,46 @@
-#[derive(Clone)]
-struct Binairo {
-    grid: Vec<Vec<i32>>,
-    size: i32,
-}
+#[path = "binario.rs"]
+mod binario;
 
-impl Binairo {
-    pub fn new(size: i32) -> Self {
-        let grid = vec![vec![-1; size as usize]; size as usize];
-        Self { grid, size }
-    }
+use std::time::Instant;
 
-    pub fn print_grid(&self) {
-        for row in &self.grid {
-            for &cell in row {
-                print!(
-                    "{}  ",
-                    match cell {
-                        -1 => '.', // Unset cell
-                        0 => '0',
-                        1 => '1',
-                        _ => '?',
-                    }
-                );
-            }
-            println!();
-        }
-    }
+use binario::Binairo;
+use clap::Parser;
 
-    // Method to set initial grid values
-    pub fn set_initial_values(&mut self, initial_values: &[(usize, usize, i32)]) {
-        for &(row, col, value) in initial_values {
-            if row < self.size as usize && col < self.size as usize {
-                self.grid[row][col] = value;
-            }
-        }
-    }
+/// CLI argument parser struct
+#[derive(Parser, Clone)]
+#[command(about = "CLI for solving Binairo puzzles")]
+#[command(author = "Tom P. <tomplanche@icloud.com>")]
+#[command(help_template = "{about}\nMade by: {author}\n\nUSAGE:\n{usage}\n\n{all-args}\n")]
+struct Cli {
+    ///Path to the image
+    #[arg(required = true)]
+    image_path: String,
+
+    /// Verbose output
+    #[arg(short, long)]
+    verbose: bool,
 }
 
 fn main() {
-    let mut game_4x4 = Binairo::new(4);
+    let args = Cli::parse();
 
-    // Example: Add some initial values
-    game_4x4.set_initial_values(&[(0, 0, 0), (1, 0, 0), (1, 3, 0), (2, 2, 1)]);
-}
+    if args.verbose {
+        println!("Image path: {}", args.image_path);
+    }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    let mut binairo = Binairo::from_image(&args.image_path).unwrap();
 
-    #[test]
-    fn test_valid_grid() {
-        let game = Binairo::new(4);
+    println!("Initial Grid:");
+    binairo.print_grid();
 
-        assert_eq!(game.grid.len(), 4);
-        assert_eq!(game.grid[0].len(), 4);
+    let now = Instant::now();
+    let soved = binairo.solve();
+    let elapsed = now.elapsed();
+
+    if soved {
+        binairo.print_grid();
+        println!("Solved in {}ms", elapsed.as_millis());
+    } else {
+        println!("No solution found");
     }
 }
