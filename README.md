@@ -21,7 +21,7 @@ Binairo is a logic puzzle game played on a rectangular grid. The objective is to
 
 ## How to Use the Binairo Resolver
 
-I play Binario on my tablet with the `Zuzu` app. I take a screenshot of the puzzle and use the `binairo_resolver` to solve it. The program reads the image, extracts the grid, and solves the puzzle.
+I play Binairo on my tablet with the `Zuzu` app. I take a screenshot of the puzzle and use the `binairo_resolver` to solve it. The program reads the image, extracts the grid, and solves the puzzle.
 
 ### Prerequisites
 
@@ -30,6 +30,8 @@ I play Binario on my tablet with the `Zuzu` app. I take a screenshot of the puzz
 - Rust and Cargo
 
 ### Usage
+
+#### Using an Image
 
 1. Prepare an image of the Binairo puzzle from the `Zuzu` app.
 
@@ -41,10 +43,40 @@ I play Binario on my tablet with the `Zuzu` app. I take a screenshot of the puzz
    - `<image_path>`: Path to the image of the Binairo puzzle.
    - `--verbose`: Optional flag for verbose output.
 
+#### Using a Text File
+
+1. Create a text file representing the Binairo puzzle. Each line should contain the initial values for a row, with cells separated by commas. Use `-1` for empty cells. For example:
+   ```
+   0,1,-1,0
+   -1,-1,1,0
+   1,0,-1,-1
+   -1,0,1,1
+   ```
+
+2. Run the program with the path to the text file:
+   ```sh
+   cargo run --release -- <file_path> [--verbose]
+   ```
+
+   - `<file_path>`: Path to the text file of the Binairo puzzle.
+   - `--verbose`: Optional flag for verbose output.
+
+#### Programmatically Setting Initial Values
+
+You can also set the initial values programmatically using the `set_initial_values` method and then solve the puzzle by calling the `solve` method.
+
 ### Example
+
+#### Using an Image
 
 ```sh
 cargo run --release -- assets/binairo_puzzle.png --verbose
+```
+
+#### Using a Text File
+
+```sh
+cargo run --release -- assets/binairo_puzzle.txt --verbose
 ```
 
 ### Output
@@ -58,7 +90,7 @@ The program will display the initial grid and the solved grid in the terminal. I
   - `main.rs`: Entry point for the CLI application.
 - `scripts/`: Contains the Python script for processing the image.
   - `main.py`: Uses OpenCV to detect the grid and the colors of the cells.
-- `assets/`: Directory for storing example images of Binairo puzzles.
+- `assets/`: Directory for storing example images and text files of Binairo puzzles.
 - `Cargo.toml`: Configuration file for the Rust project.
 - `README.md`: This file.
 
