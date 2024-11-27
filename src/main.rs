@@ -38,6 +38,7 @@ fn main() {
     let elapsed = now.elapsed();
 
     if soved {
+        println!("Solved Grid:");
         binairo.print_grid();
         println!("Solved in {}ms", elapsed.as_millis());
     } else {
